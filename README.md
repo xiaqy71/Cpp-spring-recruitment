@@ -59,7 +59,6 @@ This is the repository I use to keep track of spring 2024 recruiting (c++)
 
 数据在内存中均以补码形式存储，方便计算(做加法无需考虑符号)
 
----
 #### 大端vs小端
 
 ##### 什么是字节序
@@ -116,7 +115,7 @@ return i;
 int i = 0;
 printf("%d %d %d %d\n", ++i, i++, i++, ++i); // 4 2 1 4
 ```
----
+
 #### 函数指针 && 函数指针数组 && 指向函数指针数组的指针
 
 ##### 函数指针
