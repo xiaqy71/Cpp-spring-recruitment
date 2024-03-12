@@ -15,6 +15,8 @@ This is the repository I use to keep track of spring 2024 recruiting (c++)
       - [隐式类型转换法则](#隐式类型转换法则)
       - [设置、清除、切换和检查单个位](#设置清除切换和检查单个位)
     - [C++](#c)
+    - [算法](#算法)
+      - [排序算法](#排序算法)
     - [数据库](#数据库)
     - [系统编程](#系统编程)
     - [网络编程](#网络编程)
@@ -254,9 +256,170 @@ $$char->short->int->long->float->double$$
 1 ^ 1 = 1  
 
 ### C++
+---
+
+### 算法
+---
+
+#### 排序算法
+
+##### 选择排序
+
+```cpp
+void selectionSort(vector<int> &nums) {
+    for (int i = 0; i < nums.size() - 1; i++) {
+        int min = i;
+        for (int j = i; j < nums.size(); j++) {
+            if (nums[j] < nums[min]) min = j; 
+        }
+        swap(nums[min], nums[i]);
+    }
+}
+```
+
+时间复杂度：$O(n^2)$  
+空间复杂度：$O(1)$  
+稳定性：不稳定
+
+##### 冒泡排序
+
+```cpp
+void bubbleSort(vector<int> &nums) {
+    for (int i = 0; i < nums.size() - 1; i++) {
+        bool isSwap = false;
+        for (int j = 0; j < nums.size() - i - 1; j++) {
+            if (nums[j] > nums[j + 1]) {
+                swap(nums[j], nums[j + 1]);
+                isSwap = true;
+            }
+        }
+        if (!isSwap) break;
+    }
+}
+```
+
+时间复杂度：$O(n^2)$  
+空间复杂度：$O(1)$  
+稳定性：稳定
+
+##### 插入排序
+
+```cpp
+void insertionSort(vector<int> &nums) {
+    for (int i = 1; i < nums.size(); i++) {
+        int base = nums[i];
+        int j = i - 1;
+        while (j >= 0 && nums[j] > base) {
+            nums[j + 1] = nums[j];
+            j--;
+        }
+        nums[j + 1] = base;
+    }
+}
+```
+
+时间复杂度：$O(n^2)$  
+空间复杂度：$O(1)$  
+稳定性：稳定
+
+##### 快速排序
+
+```cpp
+int partition(vector<int> &nums, int left, int right) {
+    int i = left;
+    int j = right;
+
+    while (i < j) {
+        while (nums[i] < nums[left] && i < j) i++; // 找到第一个大于x的数
+        while (nums[j] > nums[left] && i < j) j--; // 找到第一个小于x的数
+        swap(nums[i], nums[j]);
+    }
+    swap(nums[left], nums[i]);
+    return i;
+}
+
+void quickSort(vector<int> &nums,int left, int right) {
+    if (left >= right) return;
+    int pivot = partition(nums, left, right);
+    quickSort(nums, left, pivot-1);
+    quickSort(nums, pivot+1, right);
+}
+```
+
+##### 归并排序
+
+```cpp
+void merge(vector<int> &nums, int left, int mid, int right) {
+    vector<int> tmp(right - left + 1, 0);
+    int i = left;
+    int j = mid+1;
+    int k = 0;
+    while (i <= mid && j <= right) {
+        if (nums[i] < nums[j]) {
+            tmp[k++] = nums[i++];
+        } else
+            tmp[k++] = nums[j++];
+    }
+    while (i <= mid) tmp[k++] = nums[i++];
+    while (j <= mid) tmp[k++] = nums[j++];
+    for (int k = 0; k < right - left + 1; k++) {
+        nums[left + k] = tmp[k];
+    }
+}
+
+void mergeSort(vector<int> &nums, int left, int right) {
+    if (left >= right) return;
+    int mid = (left + right) >> 1;
+    mergeSort(nums, left, mid);
+    mergeSort(nums, mid + 1, right);
+    merge(nums, left, mid, right);
+}
+```
+
+##### 堆排序
+
+```cpp
+void siftDown(vector<int> &nums, int n, int i) { //n为堆长度， 从i开始向下堆化
+    while (true) {
+        int l = 2 * i + 1;
+        int r = 2 * i + 2;
+        int ma = i;
+        if (l < n && nums[l] > nums[i]) {
+            ma = l;
+        }
+        if (r < n && nums[r] > nums[i]) {
+            ma = r;
+        }
+        if (ma == i) break; // 无需堆化
+        swap(nums[ma], nums[i]);
+        i = ma;
+    }
+
+}
+
+void heapSort(vector<int>& nums) {
+    // 从下往上堆化 除叶子节点
+    for (int i = nums.size() / 2 - 1; i >= 0; i--) {
+        siftDown(nums, nums.size(), i);
+    }
+
+    for (int i = nums.size()-1; i > 0; i--) {
+        swap(nums[i], nums[0]);
+        siftDown(nums, i, 0);
+    }
+}
+```
+排序算法比较
+![alt text](imgs/image-2.png)
+
+参考  
+[hello 算法](https://www.hello-algo.com/chapter_sorting/summary/#1)
 
 ### 数据库
+---
 
 ### 系统编程
+---
 
 ### 网络编程
+---
