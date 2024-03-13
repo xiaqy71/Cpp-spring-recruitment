@@ -1,16 +1,15 @@
-# Cpp 2024春季招聘面试笔记
+# Cpp 2024 春季招聘面试笔记
 
 This is the repository I use to keep track of spring 2024 recruiting (c++)
 
-这是我用于记录2024春招(c++)的仓库
+这是我用于记录 2024 春招(c++)的仓库
 
-
-- [Cpp 2024春季招聘面试笔记](#cpp-2024春季招聘面试笔记)
+- [Cpp 2024 春季招聘面试笔记](#cpp-2024-春季招聘面试笔记)
     - [计算机基础](#计算机基础)
       - [原码 反码 补码](#原码-反码-补码)
-      - [大端vs小端](#大端vs小端)
-    - [C语言](#c语言)
-      - [函数参数入栈顺序及i++,++i实现](#函数参数入栈顺序及ii实现)
+      - [大端 vs 小端](#大端-vs-小端)
+    - [C 语言](#c-语言)
+      - [函数参数入栈顺序及 i++,++i 实现](#函数参数入栈顺序及-ii-实现)
       - [函数指针 \&\& 函数指针数组 \&\& 指向函数指针数组的指针](#函数指针--函数指针数组--指向函数指针数组的指针)
       - [隐式类型转换法则](#隐式类型转换法则)
       - [设置、清除、切换和检查单个位](#设置清除切换和检查单个位)
@@ -24,6 +23,7 @@ This is the repository I use to keep track of spring 2024 recruiting (c++)
     - [网络编程](#网络编程)
 
 ### 计算机基础
+
 ---
 
 #### 原码 反码 补码
@@ -63,17 +63,17 @@ This is the repository I use to keep track of spring 2024 recruiting (c++)
 
 数据在内存中均以补码形式存储，方便计算(做加法无需考虑符号)
 
-#### 大端vs小端
+#### 大端 vs 小端
 
 ##### 什么是字节序
 
 字节顺序，又称端序或尾序（英语：Endianness），在计算机科学领域中，指电脑内存中或在数字通信链路中，组成多字节的字的字节的排列顺序。
 
-在几乎所有的机器上，多字节对象都被存储为连续的字节序列。例如在C语言中，一个类型为int的变量x地址为0x100，那么其对应地址表达式&x的值为0x100。且x的四个字节将被存储在电脑内存的0x100, 0x101, 0x102, 0x103位置。
+在几乎所有的机器上，多字节对象都被存储为连续的字节序列。例如在 C 语言中，一个类型为 int 的变量 x 地址为 0x100，那么其对应地址表达式&x 的值为 0x100。且 x 的四个字节将被存储在电脑内存的 0x100, 0x101, 0x102, 0x103 位置。
 
 字节的排列方式有两个通用规则。例如，将一个多位数的低位放在较小的地址处，高位放在较大的地址处，则称小端序；反之则称大端序。在网络应用中，字节序是一个必须被考虑的因素，因为不同机器类型可能采用不同标准的字节序，所以均按照网络标准转化。
 
-例如假设上述变量x类型为int，位于地址0x100处，它的值为0x01234567，地址范围为0x100~0x103字节，其内部排列顺序依赖于机器的类型。大端法从首位开始将是：0x100: 0x01, 0x101: 0x23,..。而小端法将是：0x100: 0x67, 0x101: 0x45,..。
+例如假设上述变量 x 类型为 int，位于地址 0x100 处，它的值为 0x01234567，地址范围为 0x100~0x103 字节，其内部排列顺序依赖于机器的类型。大端法从首位开始将是：0x100: 0x01, 0x101: 0x23,..。而小端法将是：0x100: 0x67, 0x101: 0x45,..。
 
 ##### 大端序
 
@@ -93,10 +93,11 @@ This is the repository I use to keep track of spring 2024 recruiting (c++)
 
 [维基百科-字节序](https://zh.wikipedia.org/zh-cn/%E5%AD%97%E8%8A%82%E5%BA%8F)
 
-### C语言
+### C 语言
+
 ---
 
-#### 函数参数入栈顺序及i++,++i实现
+#### 函数参数入栈顺序及 i++,++i 实现
 
 i++
 
@@ -192,7 +193,7 @@ int MUl(int x, int y) {
 
 int Div(int x, int y) {
     return x / y;
-} 
+}
 
 int main(int argc, char*argv[]) {
 
@@ -216,54 +217,55 @@ int main(int argc, char*argv[]) {
 #### 隐式类型转换法则
 
 若参与运算的数据类型相同则运算所得结果的数据类型也为该数据类型。若参与运算的数据类型不同，则先转换成同一类型，然后进行运算。
-1) 转化按数据长度增加的方向进行，以保证精度不降低。例如int类型和long类型运算时，先把int类型转换成long类型后再进行运算
-2) 即当参加算数或比较运算的两个操作数类型不统一时，将简单类型向复杂类型转换
+
+1. 转化按数据长度增加的方向进行，以保证精度不降低。例如 int 类型和 long 类型运算时，先把 int 类型转换成 long 类型后再进行运算
+2. 即当参加算数或比较运算的两个操作数类型不统一时，将简单类型向复杂类型转换
 
 $$char->short->int->long->float->double$$
 
-3) 在赋值语句中，赋值号两边数据类型一定是相兼容的类型，如果等号两边数据类型不兼容，语句在编译时会报错
+3. 在赋值语句中，赋值号两边数据类型一定是相兼容的类型，如果等号两边数据类型不兼容，语句在编译时会报错
 
 #### 设置、清除、切换和检查单个位
 
-设置第N位：`Number |= (1ul << nth Position)`
+设置第 N 位：`Number |= (1ul << nth Position)`
 
-设置第N位意味着如果第N位为0，则将其设置为1，如果为1，则保持不变。在C中，按为或运算用于设置整数数据类型的位。据我们所知 | 计算一个新的整数值，其中每个位的位置只有当操作数(数据类型)在该位置为1时才为1。
+设置第 N 位意味着如果第 N 位为 0，则将其设置为 1，如果为 1，则保持不变。在 C 中，按为或运算用于设置整数数据类型的位。据我们所知 | 计算一个新的整数值，其中每个位的位置只有当操作数(数据类型)在该位置为 1 时才为 1。
 
-简而言之，如果其中任何一位为1，则可以说两位的按位与始终为1
+简而言之，如果其中任何一位为 1，则可以说两位的按位与始终为 1
 
 0 | 0 = 0  
 1 | 0 = 1  
 0 | 1 = 1  
-1 | 1 = 1  
+1 | 1 = 1
 
 清除位：`Number &= ~(1UL << nth Position)`
 
-清除位意味着如果第N位为1，则将其清为0，如果为0，则保持不变。按位与运算符用于清除位整数数据类型。如果其中任何一位为零，则两位的“与”始终为零。
+清除位意味着如果第 N 位为 1，则将其清为 0，如果为 0，则保持不变。按位与运算符用于清除位整数数据类型。如果其中任何一位为零，则两位的“与”始终为零。
 
 0 & 0 = 0  
 1 & 0 = 0  
-0 & 1 = 1  
+0 & 1 = 1
 
 检查位:`Bit = Number & (1UL << nth Position)`
 
-要检查第n位，先将第n个“1” 位置向左移动，然后将其与数字“与”
+要检查第 n 位，先将第 n 个“1” 位置向左移动，然后将其与数字“与”
 
 切换位：`Numebr ^ = (1UL << nth Position)`
 
-切换位表示如果第N位为1，则将其更改为0， 如果为0， 则将其更改为1。按位异或运算符用于切换整数数据类型的位。要切换第n个位移位，将第n个位置的'1'向左移动并异或它
+切换位表示如果第 N 位为 1，则将其更改为 0， 如果为 0， 则将其更改为 1。按位异或运算符用于切换整数数据类型的位。要切换第 n 个位移位，将第 n 个位置的'1'向左移动并异或它
 
 0 ^ 0 = 1  
 1 ^ 0 = 1  
 0 ^ 1 = 0  
-1 ^ 1 = 1  
+1 ^ 1 = 1
 
 #### 空指针 && 野指针
 
 ##### 空指针
 
-指向地址0的指针
+指向地址 0 的指针
 
-C语言中
+C 语言中
 
 ```c
 #define NULL ((void *)0) // msvc
@@ -276,30 +278,30 @@ C++
 #define NULL 0 // msvc
 ```
 
-C++11中加入`nullptr`
+C++11 中加入`nullptr`
 
-NULL 与 nullptr比较
+NULL 与 nullptr 比较
 
 ```cpp
-void func(int n); 
+void func(int n);
 void func(char *s);
- 
+
 func( NULL );
 ```
 
-使用如上的函数重载时，在调用`func( NULL )`时，我们期望`void func(char *s);`被调用，而实际上`NULL`被解释为0，因此编译器将调用`void func(int n);`
+使用如上的函数重载时，在调用`func( NULL )`时，我们期望`void func(char *s);`被调用，而实际上`NULL`被解释为 0，因此编译器将调用`void func(int n);`
 
 在 C++11 中，nullptr 是一个新关键字，可以（并且应该！）用于表示 NULL 指针；
 
 **Notice:**
 
->空指针不能被解引用，类似`int *p = NULL; *p = 2;`的语句会引起编译错误
+> 空指针不能被解引用，类似`int *p = NULL; *p = 2;`的语句会引起编译错误
 
 ##### 野指针
 
 定义：
 
->一个指针既不引用合法对象，也不为 NULL
+> 一个指针既不引用合法对象，也不为 NULL
 
 产生野指针(wild pointer)的原因
 
@@ -315,34 +317,170 @@ int main(void)
 {
 
    int *p;  // uninitialized and non-static;  value undefined 未初始化且非static 值未定义
-   { 
-      int i1; 
+   {
+      int i1;
       p = &i1;  // valid 有效的
    }            // i1 no longer exists;  p now invalid    i1不再存在 p现在无效
 
    p = (int*)0xABCDEF01;  // very likely not the address of a real object 很可能不是真实存在的对象地址
 
-   { 
-      int i2;  
+   {
+      int i2;
       p = (int*)(((char*)&i2) + 1);  // p very likely to not be aligned for int access p很可能未针对 int 访问进行对齐
    }
 
    {
-      char *oops = (char*)&p;  
+      char *oops = (char*)&p;
       oops[0] = 'f';  oops[1] = 35;  // p was clobbered p被破坏
    }
-}  
+}
 ```
 
 **参考**
 
 [stack overflow \`What is the meaning of "wild pointer" in C?\` 高分回答](https://stackoverflow.com/a/2584552)
 
-
 ### C++
+
 ---
 
 #### STL
+
+C++ STL（标准模板库）是一套功能强大的 C++ 模板类，提供了通用的模板类和函数，这些模板类和函数可以实现多种流行和常用的算法和数据结构，如向量、链表、队列、栈。
+
+C++ 标准模板库的核心包括以下三个组件：
+
+| 组件               | 描述                                                                                             |
+| ------------------ | ------------------------------------------------------------------------------------------------ |
+| 容器（Containers） | 容器是用来管理某一类对象的集合。C++ 提供了各种不同类型的容器，比如 deque、list、vector、map 等。 |
+| 算法（Algorithms） | 算法作用于容器。它们提供了执行各种操作的方式，包括对容器内容执行初始化、排序、搜索和转换等操作。 |
+| 迭代器（iterators | 迭代器用于遍历对象集合的元素。这些集合可能是容器，也可能是容器的子集。 |
+
+[菜鸟教程](https://www.runoob.com/cplusplus/cpp-stl-tutorial.html)
+
+- STL
+  - container
+    - [vector](#vector)
+    - [unordered_set](#unordered_set)
+
+##### vector
+
+**Syntax**
+
+```cpp
+std::vector<dataType> vectorName;
+```
+
+常用函数
+
+- `begin()`、`end()`
+- `size()`、`capacity()`、`empty()`
+- `at(g)`、`front()`、`back()`
+- `push_back()`、`pop_back()`、`clear()`、`earse()`、`emplace()`、`emplace_back()`
+
+Example:
+
+```cpp
+// C++ program to illustrate the 
+// Modifiers in vector 
+#include <bits/stdc++.h> 
+#include <vector> 
+using namespace std; 
+  
+int main() 
+{ 
+    // Assign vector 
+    vector<int> v; 
+  
+    // fill the vector with 10 five times 
+    v.assign(5, 10); 
+  
+    cout << "The vector elements are: "; 
+    for (int i = 0; i < v.size(); i++) 
+        cout << v[i] << " "; 
+  
+    // inserts 15 to the last position 
+    v.push_back(15); 
+    int n = v.size(); 
+    cout << "\nThe last element is: " << v[n - 1]; 
+  
+    // removes last element 
+    v.pop_back(); 
+  
+    // prints the vector 
+    cout << "\nThe vector elements are: "; 
+    for (int i = 0; i < v.size(); i++) 
+        cout << v[i] << " "; 
+  
+    // inserts 5 at the beginning 
+    v.insert(v.begin(), 5); 
+  
+    cout << "\nThe first element is: " << v[0]; 
+  
+    // removes the first element 
+    v.erase(v.begin()); 
+  
+    cout << "\nThe first element is: " << v[0]; 
+  
+    // inserts at the beginning 
+    v.emplace(v.begin(), 5); 
+    cout << "\nThe first element is: " << v[0]; 
+  
+    // Inserts 20 at the end 
+    v.emplace_back(20); 
+    n = v.size(); 
+    cout << "\nThe last element is: " << v[n - 1]; 
+  
+    // erases the vector 
+    v.clear(); 
+    cout << "\nVector size after clear(): " << v.size(); 
+  
+    // two vector to perform swap 
+    vector<int> v1, v2; 
+    v1.push_back(1); 
+    v1.push_back(2); 
+    v2.push_back(3); 
+    v2.push_back(4); 
+  
+    cout << "\n\nVector 1: "; 
+    for (int i = 0; i < v1.size(); i++) 
+        cout << v1[i] << " "; 
+  
+    cout << "\nVector 2: "; 
+    for (int i = 0; i < v2.size(); i++) 
+        cout << v2[i] << " "; 
+  
+    // Swaps v1 and v2 
+    v1.swap(v2); 
+  
+    cout << "\nAfter Swap \nVector 1: "; 
+    for (int i = 0; i < v1.size(); i++) 
+        cout << v1[i] << " "; 
+  
+    cout << "\nVector 2: "; 
+    for (int i = 0; i < v2.size(); i++) 
+        cout << v2[i] << " "; 
+} 
+```
+
+Output
+
+```
+The vector elements are: 10 10 10 10 10 
+The last element is: 15
+The vector elements are: 10 10 10 10 10 
+The first element is: 5
+The first element is: 10
+The first element is: 5
+The last element is: 20
+Vector size after erase(): 0
+
+Vector 1: 1 2 
+Vector 2: 3 4 
+After Swap 
+Vector 1: 3 4 
+Vector 2: 1 2
+```
 
 ##### unordered_set
 
@@ -354,10 +492,10 @@ std::unordered_set<data_type> name;
 
 常用函数
 
-* `size()`、`empty()`
-* `find()`
-* `insert()`
-* `erase()`、`clear()`
+- `size()`、`empty()`
+- `find()`
+- `insert()`
+- `erase()`、`clear()`
 
 Example:
 
@@ -389,6 +527,7 @@ Output
 ```
 
 ### 算法
+
 ---
 
 #### 排序算法
@@ -400,7 +539,7 @@ void selectionSort(vector<int> &nums) {
     for (int i = 0; i < nums.size() - 1; i++) {
         int min = i;
         for (int j = i; j < nums.size(); j++) {
-            if (nums[j] < nums[min]) min = j; 
+            if (nums[j] < nums[min]) min = j;
         }
         swap(nums[min], nums[i]);
     }
@@ -589,10 +728,13 @@ $$\mathcal{O(1)}$$
 [hello 算法](https://www.hello-algo.com/chapter_sorting/summary/#1)
 
 ### 数据库
+
 ---
 
 ### 系统编程
+
 ---
 
 ### 网络编程
+
 ---
