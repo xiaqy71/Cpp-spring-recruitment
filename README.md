@@ -407,7 +407,7 @@ void selectionSort(vector<int> &nums) {
 }
 ```
 
-时间复杂度：$'O(n^2)'$  
+时间复杂度：$\mathcal{O(n^2)}$  
 空间复杂度：$'O(1)'$  
 稳定性：不稳定
 
