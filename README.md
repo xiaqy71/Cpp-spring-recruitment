@@ -14,7 +14,9 @@ This is the repository I use to keep track of spring 2024 recruiting (c++)
       - [函数指针 \&\& 函数指针数组 \&\& 指向函数指针数组的指针](#函数指针--函数指针数组--指向函数指针数组的指针)
       - [隐式类型转换法则](#隐式类型转换法则)
       - [设置、清除、切换和检查单个位](#设置清除切换和检查单个位)
+      - [空指针 \&\& 野指针](#空指针--野指针)
     - [C++](#c)
+      - [STL](#stl)
     - [算法](#算法)
       - [排序算法](#排序算法)
     - [数据库](#数据库)
@@ -255,8 +257,136 @@ $$char->short->int->long->float->double$$
 0 ^ 1 = 0  
 1 ^ 1 = 1  
 
+#### 空指针 && 野指针
+
+##### 空指针
+
+指向地址0的指针
+
+C语言中
+
+```c
+#define NULL ((void *)0) // msvc
+int *p = NULL;
+```
+
+C++
+
+```cpp
+#define NULL 0 // msvc
+```
+
+C++11中加入`nullptr`
+
+NULL 与 nullptr比较
+
+```cpp
+void func(int n); 
+void func(char *s);
+ 
+func( NULL );
+```
+
+使用如上的函数重载时，在调用`func( NULL )`时，我们期望`void func(char *s);`被调用，而实际上`NULL`被解释为0，因此编译器将调用`void func(int n);`
+
+在 C++11 中，nullptr 是一个新关键字，可以（并且应该！）用于表示 NULL 指针；
+
+**Notice:**
+
+>空指针不能被解引用，类似`int *p = NULL; *p = 2;`的语句会引起编译错误
+
+##### 野指针
+
+定义：
+
+>一个指针既不引用合法对象，也不为 NULL
+
+产生野指针(wild pointer)的原因
+
+- 未初始化的指针对象
+- 已不存在的对象
+- 计算的指针值
+- 不正确对齐的指针值
+- 指针本身或其指向内容的意外损坏
+- ...
+
+```c
+int main(void)
+{
+
+   int *p;  // uninitialized and non-static;  value undefined 未初始化且非static 值未定义
+   { 
+      int i1; 
+      p = &i1;  // valid 有效的
+   }            // i1 no longer exists;  p now invalid    i1不再存在 p现在无效
+
+   p = (int*)0xABCDEF01;  // very likely not the address of a real object 很可能不是真实存在的对象地址
+
+   { 
+      int i2;  
+      p = (int*)(((char*)&i2) + 1);  // p very likely to not be aligned for int access p很可能未针对 int 访问进行对齐
+   }
+
+   {
+      char *oops = (char*)&p;  
+      oops[0] = 'f';  oops[1] = 35;  // p was clobbered p被破坏
+   }
+}  
+```
+
+**参考**
+
+[stack overflow \`What is the meaning of "wild pointer" in C?\` 高分回答](https://stackoverflow.com/a/2584552)
+
+
 ### C++
 ---
+
+#### STL
+
+##### unordered_set
+
+**Syntax**
+
+```cpp
+std::unordered_set<data_type> name;
+```
+
+常用函数
+
+* `size()`、`empty()`
+* `find()`
+* `insert()`
+* `erase()`、`clear()`
+
+Example:
+
+```cpp
+    unordered_set<int> set;
+    vector<int> nums = {1, 1, 2, 4, 5};
+
+    for (const int& it : nums) {
+        set.insert(it);
+    }
+
+    for (const auto& it : set) {
+        cout << it << " ";
+    }
+    // output: 1 2 4 5
+
+    // erase a element
+    set.erase(1);
+
+    //clear the unordered_set
+    set.clear();
+    set.erase(set.begin(), set.end());
+```
+
+Output
+
+```
+1 2 4 5
+```
 
 ### 算法
 ---
@@ -277,8 +407,8 @@ void selectionSort(vector<int> &nums) {
 }
 ```
 
-时间复杂度：$O(n^2)$  
-空间复杂度：$O(1)$  
+时间复杂度：$'O(n^2)'$  
+空间复杂度：$'O(1)'$  
 稳定性：不稳定
 
 ##### 冒泡排序
