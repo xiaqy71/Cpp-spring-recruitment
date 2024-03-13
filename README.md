@@ -407,8 +407,14 @@ void selectionSort(vector<int> &nums) {
 }
 ```
 
-时间复杂度：$\mathcal{O(n^2)}$  
-空间复杂度：$'O(1)'$  
+时间复杂度：
+
+$$\mathcal{O(n^2)}$$
+
+空间复杂度：
+
+$$\mathcal{O(1)}$$
+
 稳定性：不稳定
 
 ##### 冒泡排序
@@ -428,8 +434,14 @@ void bubbleSort(vector<int> &nums) {
 }
 ```
 
-时间复杂度：$O(n^2)$  
-空间复杂度：$O(1)$  
+时间复杂度：
+
+$$\mathcal{O(n^2)}$$
+
+空间复杂度：
+
+$$\mathcal{O(1)}$$
+
 稳定性：稳定
 
 ##### 插入排序
@@ -448,8 +460,14 @@ void insertionSort(vector<int> &nums) {
 }
 ```
 
-时间复杂度：$O(n^2)$  
-空间复杂度：$O(1)$  
+时间复杂度：
+
+$$\mathcal{O(n^2)}$$
+
+空间复杂度：
+
+$$\mathcal{O(1)}$$
+
 稳定性：稳定
 
 ##### 快速排序
@@ -475,6 +493,14 @@ void quickSort(vector<int> &nums,int left, int right) {
     quickSort(nums, pivot+1, right);
 }
 ```
+
+时间复杂度：
+
+$$\mathcal{O(n \log n)}$$
+
+空间复杂度：
+
+$$\mathcal{O(\log n)}$$
 
 ##### 归并排序
 
@@ -505,6 +531,14 @@ void mergeSort(vector<int> &nums, int left, int right) {
     merge(nums, left, mid, right);
 }
 ```
+
+时间复杂度：
+
+$$\mathcal{O(n \log n)}$$
+
+空间复杂度：
+
+$$\mathcal{O(n)}$$
 
 ##### 堆排序
 
@@ -539,6 +573,15 @@ void heapSort(vector<int>& nums) {
     }
 }
 ```
+
+时间复杂度：
+
+$$\mathcal{O(n \log n)}$$
+
+空间复杂度：
+
+$$\mathcal{O(1)}$$
+
 排序算法比较
 ![alt text](imgs/image-2.png)
 
