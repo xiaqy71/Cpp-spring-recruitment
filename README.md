@@ -16,8 +16,11 @@ This is the repository I use to keep track of spring 2024 recruiting (c++)
       - [空指针 \&\& 野指针](#空指针--野指针)
     - [C++](#c)
       - [STL](#stl)
+      - [自定义函数比较器](#自定义函数比较器)
     - [算法](#算法)
       - [排序算法](#排序算法)
+      - [单调队列](#单调队列)
+      - [单调栈](#单调栈)
     - [数据库](#数据库)
     - [系统编程](#系统编程)
     - [网络编程](#网络编程)
@@ -367,6 +370,8 @@ C++ 标准模板库的核心包括以下三个组件：
 
 ##### vector
 
+`vector`与动态数组相同，能够在插入或删除元素时自动调整自身大小，其存储由容器自动处理。`vector`元素被放置在连续的内存中，以便可以使用迭代器访问和遍历它们。在`vector`中，数据插入到末尾。在末尾插入需要不同的时间，因为有时可能需要扩展数组。删除最后一个元素只需要$O(1)$时间，因为不会发生大小调整。在开头或中间插入和擦除在时间上是线性的。
+
 **Syntax**
 
 ```cpp
@@ -484,7 +489,128 @@ Vector 1: 3 4
 Vector 2: 1 2
 ```
 
+##### set
+
+`set`是一种关联容器，其中每个元素都必须是唯一的，因为元素的值可以标识它。这些值以特定的排序顺序存储，即升序或降序。
+
+使用二叉搜索树实现
+
+**Syntax**
+
+```cpp
+std::set <data_type> set_name;
+```
+
+常用函数
+
+* `begin()`
+* `end()`
+* `size()`
+* `max_size()`
+* `empty()`
+
+Example:
+
+```cpp
+// C++ program to demonstrate various functions of
+// STL
+#include <iostream>
+#include <iterator>
+#include <set>
+using namespace std;
+
+int main()
+{
+	// empty set container
+	set<int, greater<int> > s1;
+
+	// insert elements in random order
+	s1.insert(40);
+	s1.insert(30);
+	s1.insert(60);
+	s1.insert(20);
+	s1.insert(50);
+
+	// only one 50 will be added to the set
+	s1.insert(50);
+	s1.insert(10);
+
+	// printing set s1
+	set<int, greater<int> >::iterator itr;
+	cout << "\nThe set s1 is : \n";
+	for (itr = s1.begin(); itr != s1.end(); itr++) {
+		cout << *itr << " ";
+	}
+	cout << endl;
+
+	// assigning the elements from s1 to s2
+	set<int> s2(s1.begin(), s1.end());
+
+	// print all elements of the set s2
+	cout << "\nThe set s2 after assign from s1 is : \n";
+	for (itr = s2.begin(); itr != s2.end(); itr++) {
+		cout << *itr << " ";
+	}
+	cout << endl;
+
+	// remove all elements up to 30 in s2
+	cout << "\ns2 after removal of elements less than 30 "
+			":\n";
+	s2.erase(s2.begin(), s2.find(30));
+	for (itr = s2.begin(); itr != s2.end(); itr++) {
+		cout << *itr << " ";
+	}
+
+	// remove element with value 50 in s2
+	int num;
+	num = s2.erase(50);
+	cout << "\ns2.erase(50) : ";
+	cout << num << " removed\n";
+	for (itr = s2.begin(); itr != s2.end(); itr++) {
+		cout << *itr << " ";
+	}
+
+	cout << endl;
+
+	// lower bound and upper bound for set s1
+	cout << "s1.lower_bound(40) : "
+		<< *s1.lower_bound(40) << endl;
+	cout << "s1.upper_bound(40) : "
+		<< *s1.upper_bound(40) << endl;
+
+	// lower bound and upper bound for set s2
+	cout << "s2.lower_bound(40) : "
+		<< *s2.lower_bound(40) << endl;
+	cout << "s2.upper_bound(40) : "
+		<< *s2.upper_bound(40) << endl;
+
+	return 0;
+}
+
+```
+
+Output
+
+```
+The set s1 is : 
+60 50 40 30 20 10 
+
+The set s2 after assign from s1 is : 
+10 20 30 40 50 60 
+
+s2 after removal of elements less than 30 :
+30 40 50 60 
+s2.erase(50) : 1 removed
+30 40 60 
+s1.lower_bound(40) : 40
+s1.upper_bound(40) : 30
+s2.lower_bound(40) : 40
+s2.upper_bound(40) : 60
+```
+
 ##### unordered_set
+
+`unordered_set`是使用哈希表实现的无序关联容器，其键被哈希到哈希表的索引中，以便插入始终是随机的。`unordered_set`上的所有操作平均需要常数时间 O(1)，在最坏的情况下可以达到线性时间 O(n)，这取决于内部使用的哈希函数，但实际上它们执行得非常好并且通常提供常数时间查找操作。
 
 **Syntax**
 
@@ -526,6 +652,119 @@ Output
 
 ```
 1 2 4 5
+```
+
+#### 自定义函数比较器
+
+- 重写`struct`的`operator<`方法
+- 定义Comparator函数
+- 定义Comparator结构体对象
+
+1. 自定义的`struct`
+
+```cpp
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <vector>
+struct Str {
+public:
+  bool operator<(const Str &r) const { return s.length() < r.s.length(); }
+  std::string s;
+  Str(std::string str) : s(str){};
+};
+
+int main() {
+  std::vector<Str> vec = {Str("1234"), Str("456"), Str("11")};
+
+  sort(vec.begin(), vec.end());
+
+  for (auto it : vec) {
+    std::cout << it.s << " ";
+  }
+
+  std::cout << "\n";
+  return 0;
+}
+```
+
+Output
+
+```
+11 456 1234
+```
+
+2. 函数比较器
+
+```cpp
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <vector>
+
+bool cmp(const std::string& s1, const std::string& s2){
+    return s2.length() < s1.length();
+}
+
+
+int main() {
+    std::vector<std::string> vec = {"12", "123", "1234"};
+    
+    sort(vec.begin(), vec.end(), cmp);
+    
+    for (auto& s: vec){
+        std::cout << s << " ";
+    }
+    
+    std::cout << "\n";
+    
+    return 0;
+}
+```
+
+Output
+
+```
+1234 123 12
+```
+
+3. 函数对象比较器
+
+```cpp
+#include <algorithm>
+#include <iostream>
+#include <vector>
+
+struct myCmp{
+    bool operator()(
+    const std::vector<int>& l,
+    const std::vector<int>& r
+    ){
+        return l[0] < r[0];
+    }
+};
+
+
+int main() {
+    std::vector<std::vector<int>> vec = {{1,2}, {7, 8}, {4, 6}};
+    
+    sort(vec.begin(), vec.end(), myCmp());
+    
+    for (auto& it: vec){
+        std::cout << "{" << it[0] << " " << it[1] << "}" << " ";
+    }
+    
+    std::cout << "\n";
+    
+    return 0;
+}
+
+```
+
+Output
+
+```
+{1 2} {4 6} {7 8}
 ```
 
 ### 算法
@@ -728,6 +967,14 @@ $$\mathcal{O(1)}$$
 
 参考  
 [hello 算法](https://www.hello-algo.com/chapter_sorting/summary/#1)
+
+#### 单调队列
+
+[239.滑动窗口最大值 | leetcode](https://leetcode.cn/problems/sliding-window-maximum/description/)
+
+#### 单调栈
+
+[739.每日温度 | leetcode](https://leetcode.cn/problems/daily-temperatures/description/)
 
 ### 数据库
 
