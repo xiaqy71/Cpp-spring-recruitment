@@ -4,6 +4,10 @@ This is the repository I use to keep track of spring 2024 recruiting (c++)
 
 这是我用于记录 2024 春招(c++)的仓库
 
+[toc]
+
+
+
 - [Cpp 2024 春季招聘面试笔记](#cpp-2024-春季招聘面试笔记)
     - [计算机基础](#计算机基础)
       - [原码 反码 补码](#原码-反码-补码)
@@ -789,8 +793,9 @@ void selectionSort(vector<int> &nums) {
 
 时间复杂度：
 
-$$\mathcal{O(n^2)}$$
-
+$$
+\mathcal{O(n^2)}
+$$
 空间复杂度：
 
 $$\mathcal{O(1)}$$
