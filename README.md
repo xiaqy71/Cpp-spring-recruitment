@@ -132,6 +132,17 @@ int i = 0;
 printf("%d %d %d %d\n", ++i, i++, i++, ++i); // 4 2 1 4
 ```
 
+#### 指针运算
+指针不能与指针相加，但可以相减和比较。如：
+
+```cpp
+int b[N];
+int l = lower_bound(b + 1, b + n + 1, b[mid]) - b;
+int r = upper_bound(b + 1, b + n + 1, b[mid]) - b - 1;
+//使用 l r 记录
+
+```
+
 #### 函数指针
 
 本质上是一个指针，指向一个函数
