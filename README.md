@@ -30,6 +30,8 @@ This is the repository I use to keep track of spring 2024 recruiting (c++)
       - [排序算法](#排序算法)
       - [单调队列](#单调队列)
       - [单调栈](#单调栈)
+    - [Linux基础](#linux基础)
+      - [静态库和动态库](#静态库和动态库)
     - [数据库](#数据库)
     - [系统编程](#系统编程)
     - [网络编程](#网络编程)
@@ -995,6 +997,205 @@ $$\mathcal{O(1)}$$
 #### 单调栈
 
 [739.每日温度 | leetcode](https://leetcode.cn/problems/daily-temperatures/description/)
+
+### Linux基础
+
+#### 静态库和动态库
+
+##### 静态库
+
+链接阶段，会将汇编生成的目标文件.o与引用到的库一起链接打包到执行文件中。
+
+特点：
+
+- 静态库对函数库的链接是放在编译时期完成的
+- 程序在运行时与函数库再无瓜葛，移植方便
+- 浪费空间和资源，因为所有相关的目标文件与牵涉到的函数库被链接合成一个可执行文件。
+
+Linux创建动态库步骤
+
+1. 编写库头文件
+
+```cpp
+#ifndef __staticmath__h__
+#define __staticmath__h__
+
+class StaticMath {
+public:
+  StaticMath(void);
+  ~StaticMath(void);
+
+  static double add(double a, double b);
+  static double sub(double a, double b);
+  static double mul(double a, double b);
+  static double div(double a, double b);
+
+  void print();
+};
+
+#endif //__staticmath__h__
+
+```
+
+2. 源文件
+
+```cpp
+#include "StaticMath.h"
+#include <iostream>
+
+StaticMath::StaticMath(void) {}
+
+StaticMath::~StaticMath(void) {}
+
+double StaticMath::add(double a, double b) { return a + b; }
+
+double StaticMath::sub(double a, double b) { return a - b; }
+
+double StaticMath::mul(double a, double b) { return a * b; }
+
+double StaticMath::div(double a, double b) { return a / b; }
+
+void StaticMath::print() { std::cout << "Static Math Library" << std::endl; }
+
+```
+
+3. 将代码文件编译成目标文件.o
+
+```bash
+g++ -c StaticMath.cpp
+```
+
+4. 通过ar工具将目标文件打包成.a静态库文件
+
+```bash
+ar -crv libstaticmath.a StaticMath.o
+```
+
+![alt text](imgs/image-3.png)
+
+使用静态库
+
+编写测试代码
+
+```cpp
+#include "StaticMath.h"
+#include <cstdlib>
+#include <iostream>
+
+using namespace std;
+
+int main() {
+  double a = 10;
+  double b = 2;
+
+  cout << "a + b = " << StaticMath::add(a, b) << endl;
+  cout << "a - b = " << StaticMath::sub(a, b) << endl;
+  cout << "a * b = " << StaticMath::mul(a, b) << endl;
+  cout << "a / b = " << StaticMath::div(a, b) << endl;
+
+  StaticMath sm;
+  sm.print();
+
+  return 0;
+}
+
+```
+
+编译时指定静态库搜索路径(-L)、指定静态库名(不包含lib前缀和.a后缀, -l)
+
+```bash
+g++ TestStaticLibrary.cpp -L./ -lstaticmath
+```
+
+![alt text](imgs/image-4.png)
+
+##### 动态库
+
+动态库在内存中只存在一份拷贝，避免了静态库浪费空间的问题
+
+特点：
+- 动态库把一些对库函数的链接载入推迟到程序运行的时期
+- 可以实现进程之间的资源共享
+- 将一些程序升级变得简单
+- 甚至可以真正做到链接载入完全由程序员在程序代码中控制（显示调用）
+
+Linux下创建与使用动态库
+
+动态链接库的名字形式为libxxx.so，前缀为lib, 后缀名为'.so'
+
+- 针对实际库文件，每个动态库都有个特殊的名字'soame'。在程序启动后，程序通过这个名字来告诉动态加载器该载入哪个共享库
+- 在文件系统中，soname仅是一个链接到实际动态库的链接。对于动态库而言，每个库实际上都有另一个名字给编译器用。它是一个指向实际库镜像文件的链接文件(lib+soname+.so)
+
+创建动态库
+
+编写库代码
+
+```cpp 头文件
+#ifndef __dynamicmath__h__
+#define __dynamicmath__h__
+
+class DynamicMath {
+public:
+  DynamicMath(void);
+  ~DynamicMath(void);
+
+  static double add(double a, double b);
+  static double sub(double a, double b);
+  static double mul(double a, double b);
+  static double div(double a, double b);
+
+  void print();
+};
+#endif // !__dynamicmath__h__
+
+```
+
+```cpp
+#include "DynamicMath.h"
+#include <iostream>
+
+DynamicMath::DynamicMath(void) {}
+
+DynamicMath::~DynamicMath(void) {}
+
+double DynamicMath::add(double a, double b) { return a + b; }
+
+double DynamicMath::sub(double a, double b) { return a - b; }
+
+double DynamicMath::mul(double a, double b) { return a * b; }
+
+double DynamicMath::div(double a, double b) { return a / b; }
+
+void DynamicMath::print() { std::cout << "so" << std::endl; }
+
+```
+
+首先生成目标文件 加编译器选项-fpic
+
+```bash
+g++ -fPIC -c DynamicMath.cpp
+```
+-fPIC创建与地址无关的编译程序
+
+然后生成动态库， 此时要加编译器选项 -shared
+
+```bash
+g++ -shared -o libdynmath.so DynamicMath.o
+```
+
+引用动态库编译可执行文件
+
+```bash
+g++ TestDynamicLibrary.cpp -L./ -ldynmath
+```
+
+创建环境变量
+
+```bash
+g++ TestDynamicLibrary.cpp -L./ -ldynmath
+```
+
+![alt text](imgs/image-5.png)
 
 ### 数据库
 
