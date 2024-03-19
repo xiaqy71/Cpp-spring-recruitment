@@ -36,6 +36,7 @@ This is the repository I use to keep track of spring 2024 recruiting (c++)
     - [数据库](#数据库)
     - [系统编程](#系统编程)
     - [网络编程](#网络编程)
+      - [I/O复用](#io复用)
 
 ### 计算机基础
 
@@ -1001,3 +1002,44 @@ g++ TestDynamicLibrary.cpp -L./ -ldynmath
 ### 网络编程
 
 ---
+
+#### I/O复用
+
+I/O复用使程序能同时监听多个文件描述符。
+
+I/O复用虽然能同时监听多个文件描述符，但它本身是阻塞的。 并且当多个文件描述符同时就绪时，如果不采取额外的措施，程序就只能按顺序依次处理其中的每一个文件描述符，这使得服务器程序看起来像是串行工作的。如果要实现并发，只能使用多进程或多线程等手段
+
+Linux下实现I/O复用的系统调用主要有select、poll和epoll
+
+##### select系统调用
+
+原型
+
+```c
+#include <sys/select.h>
+int select(int nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds, struct timeval* timeout);
+```
+
+- nfds 指定被监听的文件描述符的总数。通常设置为select监听的所有文件描述符中的最大值加1
+- readfds、writefds和exceptfds参数分别指向可读、可写和异常等事件对应的文件描述符集合
+
+
+##### poll系统调用
+
+poll系统调用和select类似，也是在指定时间内轮询一定数量的文件描述符，以测试其中是否有就绪这
+
+```c
+#include <poll.h>
+int poll(struct pollfd* fds, nfds_t nfds, int timeout);
+```
+
+##### epoll系列系统调用
+
+内核事件表
+
+epoll是Linux特有的I/O复用函数。他在实现和使用上与select、poll有很大差异。首先,epoll使用一组函数来完成任务,而不是单个函数。其次,epoll把用户关心的文件描述符上的事件放在内核 里的一个事件表中,从而无须像select和poll那样每次调用都要重复传入文件描述符集或事件集。但epoll需要使用一个频外的文件描述符,来唯一标识内核中的这个事件表。这个文件描述符使用如下epoll_create函数来创建：
+
+```c
+#include <sys/epoll.h>
+int epoll_creat(int size)
+```
