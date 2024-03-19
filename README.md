@@ -24,6 +24,7 @@ This is the repository I use to keep track of spring 2024 recruiting (c++)
       - [位操作](#位操作)
       - [空指针 \&\& 野指针](#空指针--野指针)
     - [C++](#c)
+      - [C++和C的不同以及面向对象的了解](#c和c的不同以及面向对象的了解)
       - [STL](#stl)
       - [自定义函数比较器](#自定义函数比较器)
     - [算法](#算法)
@@ -101,7 +102,7 @@ This is the repository I use to keep track of spring 2024 recruiting (c++)
 
 低位低地址
 
-> tips: 为了保证传送顺序的一致性, 网际协议使用大端字节序来传送数据。
+> tips: 现代PC大多采用小端字节序，因此小端字节序又被称为主机字节序。大端字节序也称为网络字节序，它给所有接收数据的主机提供了一个正确解释收到的格式化数据的保证。
 
 **参考**
 
@@ -369,11 +370,23 @@ int main(void)
 
 ---
 
+#### C++和C的不同以及面向对象的了解
+
+1) C语言是面向过程的程序设计，主要核心为：数据结构和算法，具有高效的特性。对于C语言程序的设计，主要是考虑如何通过一个过程，对输入进行处理得出一个输出。C++是面向对象的程序设计，对于C++，首先考虑的是如何构造一个对象模型，让这个模型配合对应问题，这样可以通过获取对象状态信息得到输出
+2) C++对比C增强点
+   1) 命名空间
+   2) 变量检测增强
+   3) struct增强
+   4) 面向对象
+   5) 面向对象三大特性：封装、继承、多态
+
 #### STL
 
 - container
   - [vector](#vector)
+  - [set](#set)
   - [unordered_set](#unordered_set)
+  - [unordered_map](#unordered_map)
 - Algorithms
 - iterators
 
@@ -407,110 +420,6 @@ std::vector<dataType> vectorName;
 - `at(g)`、`front()`、`back()`
 - `push_back()`、`pop_back()`、`clear()`、`earse()`、`emplace()`、`emplace_back()`
 
-Example:
-
-```cpp
-// C++ program to illustrate the 
-// Modifiers in vector 
-#include <bits/stdc++.h> 
-#include <vector> 
-using namespace std; 
-  
-int main() 
-{ 
-    // Assign vector 
-    vector<int> v; 
-  
-    // fill the vector with 10 five times 
-    v.assign(5, 10); 
-  
-    cout << "The vector elements are: "; 
-    for (int i = 0; i < v.size(); i++) 
-        cout << v[i] << " "; 
-  
-    // inserts 15 to the last position 
-    v.push_back(15); 
-    int n = v.size(); 
-    cout << "\nThe last element is: " << v[n - 1]; 
-  
-    // removes last element 
-    v.pop_back(); 
-  
-    // prints the vector 
-    cout << "\nThe vector elements are: "; 
-    for (int i = 0; i < v.size(); i++) 
-        cout << v[i] << " "; 
-  
-    // inserts 5 at the beginning 
-    v.insert(v.begin(), 5); 
-  
-    cout << "\nThe first element is: " << v[0]; 
-  
-    // removes the first element 
-    v.erase(v.begin()); 
-  
-    cout << "\nThe first element is: " << v[0]; 
-  
-    // inserts at the beginning 
-    v.emplace(v.begin(), 5); 
-    cout << "\nThe first element is: " << v[0]; 
-  
-    // Inserts 20 at the end 
-    v.emplace_back(20); 
-    n = v.size(); 
-    cout << "\nThe last element is: " << v[n - 1]; 
-  
-    // erases the vector 
-    v.clear(); 
-    cout << "\nVector size after clear(): " << v.size(); 
-  
-    // two vector to perform swap 
-    vector<int> v1, v2; 
-    v1.push_back(1); 
-    v1.push_back(2); 
-    v2.push_back(3); 
-    v2.push_back(4); 
-  
-    cout << "\n\nVector 1: "; 
-    for (int i = 0; i < v1.size(); i++) 
-        cout << v1[i] << " "; 
-  
-    cout << "\nVector 2: "; 
-    for (int i = 0; i < v2.size(); i++) 
-        cout << v2[i] << " "; 
-  
-    // Swaps v1 and v2 
-    v1.swap(v2); 
-  
-    cout << "\nAfter Swap \nVector 1: "; 
-    for (int i = 0; i < v1.size(); i++) 
-        cout << v1[i] << " "; 
-  
-    cout << "\nVector 2: "; 
-    for (int i = 0; i < v2.size(); i++) 
-        cout << v2[i] << " "; 
-} 
-```
-
-Output
-
-```
-The vector elements are: 10 10 10 10 10 
-The last element is: 15
-The vector elements are: 10 10 10 10 10 
-The first element is: 5
-The first element is: 10
-The first element is: 5
-The last element is: 20
-Vector size after erase(): 0
-
-Vector 1: 1 2 
-Vector 2: 3 4 
-After Swap 
-Vector 1: 3 4 
-Vector 2: 1 2
-```
-
 ##### set
 
 `set`是一种关联容器，其中每个元素都必须是唯一的，因为元素的值可以标识它。这些值以特定的排序顺序存储，即升序或降序。
@@ -531,105 +440,6 @@ std::set <data_type> set_name;
 * `max_size()`
 * `empty()`
 
-Example:
-
-```cpp
-// C++ program to demonstrate various functions of
-// STL
-#include <iostream>
-#include <iterator>
-#include <set>
-using namespace std;
-
-int main()
-{
-	// empty set container
-	set<int, greater<int> > s1;
-
-	// insert elements in random order
-	s1.insert(40);
-	s1.insert(30);
-	s1.insert(60);
-	s1.insert(20);
-	s1.insert(50);
-
-	// only one 50 will be added to the set
-	s1.insert(50);
-	s1.insert(10);
-
-	// printing set s1
-	set<int, greater<int> >::iterator itr;
-	cout << "\nThe set s1 is : \n";
-	for (itr = s1.begin(); itr != s1.end(); itr++) {
-		cout << *itr << " ";
-	}
-	cout << endl;
-
-	// assigning the elements from s1 to s2
-	set<int> s2(s1.begin(), s1.end());
-
-	// print all elements of the set s2
-	cout << "\nThe set s2 after assign from s1 is : \n";
-	for (itr = s2.begin(); itr != s2.end(); itr++) {
-		cout << *itr << " ";
-	}
-	cout << endl;
-
-	// remove all elements up to 30 in s2
-	cout << "\ns2 after removal of elements less than 30 "
-			":\n";
-	s2.erase(s2.begin(), s2.find(30));
-	for (itr = s2.begin(); itr != s2.end(); itr++) {
-		cout << *itr << " ";
-	}
-
-	// remove element with value 50 in s2
-	int num;
-	num = s2.erase(50);
-	cout << "\ns2.erase(50) : ";
-	cout << num << " removed\n";
-	for (itr = s2.begin(); itr != s2.end(); itr++) {
-		cout << *itr << " ";
-	}
-
-	cout << endl;
-
-	// lower bound and upper bound for set s1
-	cout << "s1.lower_bound(40) : "
-		<< *s1.lower_bound(40) << endl;
-	cout << "s1.upper_bound(40) : "
-		<< *s1.upper_bound(40) << endl;
-
-	// lower bound and upper bound for set s2
-	cout << "s2.lower_bound(40) : "
-		<< *s2.lower_bound(40) << endl;
-	cout << "s2.upper_bound(40) : "
-		<< *s2.upper_bound(40) << endl;
-
-	return 0;
-}
-
-```
-
-Output
-
-```
-The set s1 is : 
-60 50 40 30 20 10 
-
-The set s2 after assign from s1 is : 
-10 20 30 40 50 60 
-
-s2 after removal of elements less than 30 :
-30 40 50 60 
-s2.erase(50) : 1 removed
-30 40 60 
-s1.lower_bound(40) : 40
-s1.upper_bound(40) : 30
-s2.lower_bound(40) : 40
-s2.upper_bound(40) : 60
-```
-
 ##### unordered_set
 
 `unordered_set`是使用哈希表实现的无序关联容器，其键被哈希到哈希表的索引中，以便插入始终是随机的。`unordered_set`上的所有操作平均需要常数时间 O(1)，在最坏的情况下可以达到线性时间 O(n)，这取决于内部使用的哈希函数，但实际上它们执行得非常好并且通常提供常数时间查找操作。
@@ -647,34 +457,17 @@ std::unordered_set<data_type> name;
 - `insert()`
 - `erase()`、`clear()`
 
-Example:
+##### unordered_map
 
-```cpp
-    unordered_set<int> set;
-    vector<int> nums = {1, 1, 2, 4, 5};
+`unordered_map`是一个关联容器，用于存储由键值和映射值组合形成的元素。键值用于唯一标识元素，映射值是与键关联的内容。键和值都可以是任何预定义或用户定义的类型。简单来说，`unordered_map`就像一个字典类型的数据结构，其本身存储元素。它包含连续的对（键、值），允许根据其唯一键快速检索单个元素。
 
-    for (const int& it : nums) {
-        set.insert(it);
-    }
+`unordered_map` 内部使用哈希表实现，提供给映射的键被哈希为哈希表的索引，这就是为什么数据结构的性能很大程度上依赖于哈希函数，但平均而言，搜索、插入和删除的成本哈希表的复杂度为 O(1)。
 
-    for (const auto& it : set) {
-        cout << it << " ";
-    }
-    // output: 1 2 4 5
+`operator[]` 和 `insert()`
 
-    // erase a element
-    set.erase(1);
+`operator[]`： 如果键已经存在于map中，`operator[]`不会覆盖现有值；相反，它返回对现有值的引用。
 
-    //clear the unordered_set
-    set.clear();
-    set.erase(set.begin(), set.end());
-```
-
-Output
-
-```
-1 2 4 5
-```
+`insert()`： 如果键已经存在于map中，insert()不会执行任何插入，并返回到具有相同键的现有元素的迭代器。
 
 #### 自定义函数比较器
 
