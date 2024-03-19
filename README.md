@@ -1043,3 +1043,7 @@ epoll是Linux特有的I/O复用函数。他在实现和使用上与select、poll
 #include <sys/epoll.h>
 int epoll_creat(int size)
 ```
+
+size参数现在并不起作用，只是给内核一个提示，告诉它事件表需要多大，该函数返回的文件描述符将用作其他epoll系统调用的第一个参数，以指定要访问的内核事件表
+
+
