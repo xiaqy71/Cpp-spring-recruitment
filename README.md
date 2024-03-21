@@ -23,8 +23,14 @@ This is the repository I use to keep track of spring 2024 recruiting (c++)
       - [隐式类型转换法则](#隐式类型转换法则)
       - [位操作](#位操作)
       - [空指针 \&\& 野指针](#空指针--野指针)
+      - [回调函数](#回调函数)
+      - [生成随机数](#生成随机数)
+      - [逗号表达式运算法则](#逗号表达式运算法则)
     - [C++](#c)
       - [C++和C的不同以及面向对象的了解](#c和c的不同以及面向对象的了解)
+      - [static关键字](#static关键字)
+      - [new和malloc区别](#new和malloc区别)
+      - [多态的实现](#多态的实现)
       - [STL](#stl)
       - [自定义函数比较器](#自定义函数比较器)
     - [算法](#算法)
@@ -367,6 +373,72 @@ int main(void)
 
 [stack overflow \`What is the meaning of "wild pointer" in C?\` 高分回答](https://stackoverflow.com/a/2584552)
 
+#### 回调函数
+
+回调函数就是利用函数指针来，在函数内部调用不同的函数
+
+```c
+void test(){
+    printf("hehe!\n");
+}
+void print_hehe(void (*pfun)(void)){
+    if (1){
+        pfun();
+    }
+}
+int main(){
+    print_hehe(&test);
+}
+```
+
+#### 生成随机数
+
+```c
+rand() // 函数 随机发生器
+int rand() // 用法
+csdlib // 所在头文件
+```
+
+rand() 会根据当前的随机数种子，根据线性同余法生成一段数列，因这段数列周期特别长故在一定的范围里可以看成是随机的
+rand() 返回一随机数值的范围在0~RAND_MAX之间。RAND_MAX的范围最少是在32767之间。0~RAND_MAX每个数字被选中的几率是相同的。
+用户未设定随机数种子时，系统默认的随机数种子为 1 
+rand()产生的是伪随机数字，每次执行时是相同的，若要不同，用函数srand()初始化它。
+
+```c
+srand() // 函数， 初始化随机数发生器
+void srand(unsigned int seed) // 用法
+stdlib.h // 所在头文件
+```
+
+srand() 用来设置rand()产生随机数时的随机数种子。参数seed必须是个整数，如果每次seed都设置相同值，每次都会一样
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    srand(1);
+    int i;
+
+    for (i = 0;i < 5; ++i) {
+        printf("%d", rand());
+    }
+    return 0;
+}
+```
+
+#### 逗号表达式运算法则
+
+1. 逗号表达式的运算过程为：从左往右逐个计算表达式
+2. 逗号表达式作为一个整体，它的值为最后一个表达式的值
+3. 逗号运算符的优先级别在所有运算符中最低
+
+```c
+(a = 3, b = 5, b += a, c = b * 5)
+// 逗号表达式的值 40
+```
+
 ### C++
 
 ---
@@ -380,6 +452,89 @@ int main(void)
    3) struct增强
    4) 面向对象
    5) 面向对象三大特性：封装、继承、多态
+
+#### static关键字
+
+1. 定义全局静态变量和局部静态变量
+2. 定义静态函数：在函数返回类型前加上static关键字，函数即被定义为静态函数，静态函数只能在本源文件中使用；
+3. 在变量类型前加上static关键字，变量即被定义为静态变量。静态变量只能在本源文件中使用
+4. c++中，static关键字可以用于定义类中的静态成员变量，所有对象的静态数据成员都共享这一块静态存储空间
+5. 在c++中，static关键字可以用于定义类中的静态成员函数
+
+#### new和malloc区别
+
+1. new是操作符，而malloc是函数
+2. new在调用的时候先分配内存，再调用构造函数，释放的时候调用析构函数。而malloc没有构造函数和析构函数
+3. malloc需要给定申请内存的大小，返回的指针需要强转
+4. new可以被重载，malloc不行
+5. new分配内存更直接和安全
+6. new发生错误抛出异常，malloc返回null
+
+#### 多态的实现
+
+##### 类的虚函数表
+
+- 每个包含了虚函数的类都包含一个虚表
+- 当一个类(B)继承另一个类(A)时，类B会继承类A的函数的调用权。所以如果一个基类包含了虚函数，那么其继承类也可调用这些虚函数，换句话说，一个类继承了包含虚函数的基类，那么这个类也拥有自己的虚表
+
+```cpp
+class A{
+public:
+    virtual void vfunc1();
+    virtual void vfunc2();
+
+    void func1();
+    void func2();
+
+private:
+    int m_data1, m_data2;
+};
+
+class B: public A{ // 此时类B也拥有自己的虚表
+
+};
+```
+
+![alt text](imgs/image-6.png)
+
+- 虚表是一个存放指针的数组，其内的元素是虚函数的指针，每个元素对应一个虚函数的函数指针。需要指出的是：普通的函数即非虚函数，其调用并不需要经过虚表，所以虚表的元素并不包括普通函数的函数指针
+- 虚表内的条目，即虚函数指针的赋值发生在编译器的编译阶段，也就是说在代码的编译阶段，虚表就可以构造出来了
+
+##### 虚表指针
+
+- 虚表是属于类的，而不是某个具体的对象，一个类只需要一个虚表，同一个类的所有对象都使用同一个虚表
+- 为了指定对象的虚表，对象内部包含一个虚表的指针，来指向自己所使用的虚表。为了让每个包含虚表的类的内部都有一个虚表指针，编译器在类中添加了一个指针，*_vptr, 用来指向虚表。这样当类的对象在创建时便拥有了这个指针，且这个指针的值会自动被设置为指向类的虚表
+
+```cpp
+class A{
+public: 
+    virtual void vfunc1();
+    virtual void vfunc2();
+    void func1();
+    void func2();
+private: 
+    int m_data1, m_data2;
+};
+
+class B : public A{
+public:
+    virtual void vfunc1();
+    void func2();
+
+private:
+    int m_data3;
+};
+
+class C : public B {
+public : 
+    virtual void vfunc2();
+    void func2();
+private: 
+    int m_data1, m_data4;
+};
+```
+
+![alt text](imgs/image-7.png)
 
 #### STL
 
